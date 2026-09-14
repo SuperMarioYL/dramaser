@@ -1,0 +1,74 @@
+version: 1
+# replay provider 预置夹具：角色渲染参数、每镜头场景、无锁定漂移调度。
+# 全部为块式 YAML；dramaser 的内置解析器支持本文件使用的子集。
+characters:
+  ayao:
+    skin: "#f2d8c0"
+    hair: "#2b2118"
+    eyes: "#3d2b1f"
+    outfit: "#e9e1d3"
+    coat: "#a98f6f"
+    blush: "#e8a8a0"
+scenes:
+  ep01_s01:
+    sky: ["#232b4a", "#4a5a8a"]
+    prop: rain
+  ep01_s02:
+    sky: ["#3a2f2a", "#6b5344"]
+    prop: counter
+  ep01_s03:
+    sky: ["#2c3560", "#8a6a7a"]
+    prop: city
+  ep02_s01:
+    sky: ["#33283a", "#5c4668"]
+    prop: window
+  ep02_s02:
+    sky: ["#20263f", "#3d4468"]
+    prop: phone
+  ep02_s03:
+    sky: ["#4a3550", "#c78a6a"]
+    prop: city
+  ep03_s01:
+    sky: ["#262b3d", "#4d5570"]
+    prop: crowd
+  ep03_s02:
+    sky: ["#3a2f2a", "#7a604a"]
+    prop: counter
+  ep03_s03:
+    sky: ["#233055", "#6a5a8a"]
+    prop: lights
+# 无主体参考时的跨集漂移调度：扰动逐集累积，另加按镜头 id 播种的微抖动。
+drift:
+  ep01:
+    face: 0.00
+    eye: 0.00
+    hair_hue: 0
+    hair_light: 0.00
+    outfit_hue: 0
+    outfit_light: 0.00
+    coat_hue: 0
+    coat_light: 0.00
+    skin: 0.00
+    hair_len: 0.00
+  ep02:
+    face: 0.12
+    eye: -0.12
+    hair_hue: -12
+    hair_light: 0.20
+    outfit_hue: 24
+    outfit_light: 0.06
+    coat_hue: 15
+    coat_light: 0.06
+    skin: 0.03
+    hair_len: -0.05
+  ep03:
+    face: 0.20
+    eye: -0.20
+    hair_hue: -18
+    hair_light: 0.34
+    outfit_hue: -40
+    outfit_light: -0.15
+    coat_hue: -28
+    coat_light: -0.10
+    skin: 0.07
+    hair_len: -0.10

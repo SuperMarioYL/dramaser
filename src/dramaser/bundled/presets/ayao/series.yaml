@@ -1,0 +1,91 @@
+title: 咖啡与晚风
+genre: 都市情感微短剧
+characters:
+  - id: ayao
+    name: 阿瑶
+    role: 女主角
+    appearance_lock:
+      脸型: 鹅蛋脸，下颌线柔和，左耳戴银色小星耳钉
+      发型: 黑棕色长直发，中分，发尾微卷，垂至锁骨
+      瞳色: 深棕色杏眼，眼神温润
+      服装: 米白色针织衫，外搭浅咖色长风衣
+      气质: 温柔沉静，微笑时嘴角微翘
+    reference_images: [reference/ayao.png]
+    voice: 温柔女声（v0.1 仅存档，不生成）
+style:
+  palette_lock: ["#2b2340", "#a98f6f", "#e9e1d3"]
+  negative_lock: [多手指, 面部畸变, 画面模糊, 文字水印, 比例失调]
+platform:
+  preset: douyin_60s
+  aspect: 9:16
+  duration_tier: 60
+  subtitle_safe_zone:
+    top: 0.08
+    bottom: 0.12
+    right_rail: 0.10
+gates:
+  consistency_threshold: 0.85
+episodes:
+  - id: ep01
+    title: 重逢
+    shots:
+      - id: ep01_s01
+        characters: [ayao]
+        line: 三年了，这家店的灯还是没换过。
+        action: 雨夜便利店门口，阿瑶收伞抖水，暖光从店内洒出
+        camera: 中景
+        duration_s: 5
+      - id: ep01_s02
+        characters: [ayao]
+        line: 你还是记得，我不加糖。
+        action: 店内吧台，阿瑶捧着热美式，指尖轻碰杯壁
+        camera: 近景
+        duration_s: 4
+      - id: ep01_s03
+        characters: [ayao]
+        line: 那……这次别再走散了。
+        action: 街边长椅，晚风掀起阿瑶的风衣下摆
+        camera: 远景
+        duration_s: 5
+  - id: ep02
+    title: 旧照
+    shots:
+      - id: ep02_s01
+        characters: [ayao]
+        line: 这张照片，你居然还留着。
+        action: 阿瑶在家翻旧相册，台灯暖光落在侧脸
+        camera: 中景
+        duration_s: 5
+      - id: ep02_s02
+        characters: [ayao]
+        line: 打了又删的话，就当没想过。
+        action: 手机屏幕特写，一条打了又删的消息
+        camera: 特写
+        duration_s: 4
+      - id: ep02_s03
+        characters: [ayao]
+        line: 风大了，我们下去吧。
+        action: 天台黄昏，阿瑶背对镜头看晚霞
+        camera: 远景
+        duration_s: 5
+  - id: ep03
+    title: 晚风
+    shots:
+      - id: ep03_s01
+        characters: [ayao]
+        line: 人这么多，你可拉紧我。
+        action: 地铁站口人潮涌动，阿瑶驻足回望
+        camera: 中景
+        duration_s: 4
+      - id: ep03_s02
+        characters: [ayao]
+        line: 老板都说，我们像回到了三年前。
+        action: 咖啡店老位置，两杯咖啡冒着热气
+        camera: 近景
+        duration_s: 5
+      - id: ep03_s03
+        characters: [ayao]
+        line: 晚风、咖啡、还有你——都在，就够了。
+        action: 雨停，路灯下阿瑶抬头微笑
+        camera: 中景
+        duration_s: 6

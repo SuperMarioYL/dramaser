@@ -18,6 +18,12 @@ htmlcov/
 # macOS
 .DS_Store
 
+# dramaser run outputs (demo / drafts / series runs)
+dramaser-demo/
+jianying-drafts/
+runs/
+reports/
+
 # local assistant workspace
 .claude/
 CLAUDE.md

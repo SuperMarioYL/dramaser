@@ -1,4 +1,310 @@
 {
+  "schema": 3,
+  "name": "dramaser",
   "github": "https://github.com/SuperMarioYL/dramaser",
-  "palette": "auto"
+  "palette": "auto",
+  "lang": {
+    "primary": "zh",
+    "toggle": true
+  },
+  "hero": {
+    "eyebrow": {
+      "zh": "竖屏微短剧 · 角色一致性产片工具",
+      "en": "Character consistency for vertical drama series"
+    },
+    "headline": {
+      "zh": "同一角色连出多集，不漂移\n成片直出剪映",
+      "en": "One character across episodes, zero drift\nexported straight into JianYing"
+    },
+    "sub": {
+      "zh": "dramaser 把角色设定集锁定契约、镜头血缘与 9:16 平台规范写进一个 series.yaml：无 key 回放 demo 一条命令产出对比 GIF、一致性报告与剪映 draft；live 模式接 Vidu 主体参考生成与 GLM-4V-Flash 一致性门。",
+      "en": "dramaser puts the character-lock contract, shot lineage and 9:16 platform rules into one series.yaml: the no-key replay demo produces a comparison GIF, a consistency report and a JianYing draft in a single command; live mode wires Vidu subject-reference generation and the GLM-4V-Flash consistency gate."
+    },
+    "href": "#quickstart",
+    "cta": {
+      "zh": "开始使用",
+      "en": "Get started"
+    },
+    "ctaGithub": {
+      "zh": "在 GitHub 查看",
+      "en": "View on GitHub"
+    }
+  },
+  "advantages": [
+    {
+      "title": {
+        "zh": "角色设定集跨集锁定",
+        "en": "Cross-episode character lock"
+      },
+      "body": {
+        "zh": "appearance_lock 契约与参考图写进每一次主体参考生成，脸型、发色、服装不再跨集漂移——角色识别度直接决定竖屏 IP 账号的涨粉与商单。",
+        "en": "The appearance_lock contract and reference images go into every subject-reference generation, so face shape, hair color and outfit stop drifting across episodes — character recognizability is what drives follower growth and brand deals for these accounts."
+      }
+    },
+    {
+      "title": {
+        "zh": "分镜级局部重生成",
+        "en": "Shot-level partial regeneration"
+      },
+      "body": {
+        "zh": "每个镜头落盘 run_id、provider、参数哈希与评分血缘；regen 只重烧漂移镜头，其余产物原样复用，不重复烧 API。",
+        "en": "Every shot persists run_id, provider, params hash and score lineage; regen re-burns only drifted shots and reuses everything else, without re-burning API credits."
+      }
+    },
+    {
+      "title": {
+        "zh": "平台规范即代码",
+        "en": "Platform rules as code"
+      },
+      "body": {
+        "zh": "9:16 画布、60s 时长档、字幕安全区全部进 series.yaml，成片直接导出为剪映可打开的 draft，--install-draft 一条命令拷入剪映草稿目录。",
+        "en": "The 9:16 canvas, the 60s duration tier and the subtitle safe zone all live in series.yaml, and the finished cut exports as a JianYing-openable draft — --install-draft copies it straight into the JianYing drafts folder."
+      }
+    }
+  ],
+  "scene": {
+    "kind": "neon-graph",
+    "fallback": "/assets/scene-dark.svg",
+    "fallbackLight": "/assets/scene-light.svg",
+    "caption": {
+      "zh": "示意粒子场景 · 录制结果见下方 Demo",
+      "en": "Illustrative particle scene — recorded results in the demo below"
+    }
+  },
+  "story": {
+    "intro": {
+      "title": {
+        "zh": "Agent 管线成为主力产能后，\n最先塌的是角色一致性",
+        "en": "Once the agent pipeline becomes your main capacity,\ncharacter consistency breaks first"
+      },
+      "body": {
+        "zh": "运营抖音/视频号竖屏 IP 或微短剧系列的小团队，把 AI 生成管线当主力产能之后，最先塌的不是「生成不出」，而是「生成了几十个长得不一样的同一角色」：通用文生视频逐条独立输出，角色脸型、发色、服装跨集漂移。OpenMontage、hyperframes 这类 agentic 视频生产底座解决了管线与渲染原语，但角色连续性在它们那里只是一个评分项，不是有状态的资产。dramaser 接的是中国交付面的那一层：Vidu 主体参考、剪映 draft 直出、抖音 60s 竖屏规范，整套竖屏系列规范本身打包成可复用的 Skill 资产——团队交接就是交接一个 git 仓库。",
+        "en": "Once a small team running a vertical-drama IP account starts using an AI generation pipeline as its main capacity, the first thing that breaks is not \"we can't generate\" — it's \"we generated dozens of slightly different versions of the same character\": generic text-to-video emits every clip independently, so face shape, hair color and outfit drift across episodes. Agentic video production bases like OpenMontage and hyperframes solved the pipeline and the rendering primitives, but continuity there is a scoring item, not a stateful asset. dramaser is the layer wired to the Chinese delivery surface: Vidu subject reference, JianYing draft export, the Douyin 60s vertical preset — with the whole vertical-series convention packaged as a reusable Skill asset, so handing over a series means handing over a git repository."
+      }
+    },
+    "sections": [
+      {
+        "title": {
+          "zh": "锁定生产循环：只重烧漂移镜头",
+          "en": "The locked production loop: re-burn only what drifted"
+        },
+        "body": {
+          "zh": "series.yaml 单一工程文件驱动整条管线：锁定角色设定集 → 逐镜头生成与评审 → 血缘落盘。评分低于阈值的镜头标记 drifted，regen 只替换漂移镜头，其余镜头复用已锁定产物；导出的是 9:16 画布、字幕安全区、时长档分段的剪映 draft。",
+          "en": "One series.yaml project file drives the whole pipeline: lock the character sheet, generate and judge per shot, persist lineage. Below-threshold shots are marked drifted; regen replaces only those, and the rest reuse their locked assets. The export is a JianYing draft with a 9:16 canvas, safe-zone subtitles and tier segmentation."
+        },
+        "image": {
+          "light": "/assets/presentation/process-light.svg",
+          "dark": "/assets/presentation/process-dark.svg",
+          "alt": {
+            "zh": "锁定生产循环：锁定角色设定集，逐镜头生成与评审，血缘落盘，只重生成漂移镜头并导出新 draft。漂移镜头被门拦下，锁定镜头保持产物不变。",
+            "en": "Locked production loop: lock the character sheet, generate and judge per shot, record lineage, regenerate only drifted shots and export a fresh draft. Drifted shots fail the gate; locked shots keep their assets."
+          },
+          "mobile": {
+            "light": "/assets/presentation/process-mobile-light.svg",
+            "dark": "/assets/presentation/process-mobile-dark.svg"
+          }
+        }
+      },
+      {
+        "title": {
+          "zh": "单进程 CLI，血缘落盘",
+          "en": "A single-process CLI with lineage on disk"
+        },
+        "body": {
+          "zh": "零服务、零守护进程：SeriesAsset（series.yaml）进入 pipeline core，分发给 provider 层（replay 渲染 / Vidu 主体参考）与 GLM-4V-Flash 评审，评审回写镜头血缘（run_id / provider / params_hash / judge_score / status），再 fan-out 到剪映导出器与报告渲染器。外部依赖只有 ffmpeg 二进制（live 模式评审视频镜头时抽帧）。",
+          "en": "No services, no daemons: SeriesAsset (series.yaml) feeds the pipeline core, which dispatches to the provider layer (replay renderer / Vidu subject reference) and the GLM-4V-Flash judge; verdicts write back into shot lineage (run_id / provider / params_hash / judge_score / status) and fan out to the JianYing exporter and the report renderer. The only external dependency is the ffmpeg binary, used to extract frames when judging live video shots."
+        },
+        "image": {
+          "light": "/assets/presentation/architecture-light.svg",
+          "dark": "/assets/presentation/architecture-dark.svg",
+          "alt": {
+            "zh": "数据流：SeriesAsset（series.yaml）进入 pipeline core，分发给 provider 层（replay 渲染 / Vidu 主体参考）与 GLM-4V-Flash 评审，评审回写血缘，导出到剪映导出器与报告渲染器。",
+            "en": "Data flow: SeriesAsset (series.yaml) feeds the pipeline core, which dispatches to the provider layer (replay renderer / Vidu subject reference) and the GLM-4V-Flash judge; verdicts write back into lineage and fan out to the JianYing exporter and the report renderer."
+          },
+          "mobile": {
+            "light": "/assets/presentation/architecture-mobile-light.svg",
+            "dark": "/assets/presentation/architecture-mobile-dark.svg"
+          }
+        }
+      },
+      {
+        "title": {
+          "zh": "已实现的路由",
+          "en": "Implemented routes"
+        },
+        "body": {
+          "zh": "无 key 回放 demo、Vidu 主体参考生成（需 key，按公开 ent/v2 文档实现）、GLM-4V-Flash 结构化评审（需 key）、剪映 draft 导出（pyJianYingDraft 0.3）、抖音 60s 预设（9:16 / 时长档 / 安全区）、git 友好的系列工程。live 生成与评审需要 VIDU_API_KEY 与 ZHIPU_API_KEY；replay 回放无需任何 key。",
+          "en": "The no-key replay demo, Vidu subject-reference generation (key required; built from the public ent/v2 docs), GLM-4V-Flash structured judging (key required), JianYing draft export (pyJianYingDraft 0.3), the Douyin 60s preset (9:16 / tier / safe zone), and a git-friendly series project. Live generation and judging need VIDU_API_KEY and ZHIPU_API_KEY; the replay demo needs no key at all."
+        },
+        "image": {
+          "light": "/assets/presentation/integrations-light.svg",
+          "dark": "/assets/presentation/integrations-dark.svg",
+          "alt": {
+            "zh": "已实现的路由：Vidu 主体参考生成、GLM-4V-Flash 结构化评审、剪映 draft 导出（pyJianYingDraft 0.3）、抖音 60s 预设（9:16/时长档/安全区）、无 key replay 回放、git 友好的系列工程。",
+            "en": "Implemented routes: Vidu subject-reference generation, GLM-4V-Flash structured judging, JianYing draft export via pyJianYingDraft 0.3, the Douyin 60s preset (9:16 / tier / safe zone), the no-key replay demo, and a git-friendly series project."
+          },
+          "mobile": {
+            "light": "/assets/presentation/integrations-mobile-light.svg",
+            "dark": "/assets/presentation/integrations-mobile-dark.svg"
+          }
+        }
+      }
+    ],
+    "details": [
+      {
+        "title": {
+          "zh": "series.yaml：唯一工程文件",
+          "en": "series.yaml: the single project file"
+        },
+        "body": {
+          "zh": "dramaser init 生成的即是完整模板：角色 appearance_lock（任意标签的自由属性）、风格 palette_lock / negative_lock、平台 preset 与时长档、一致性门限。修改角色就是编辑 appearance_lock 与参考图。",
+          "en": "The file dramaser init scaffolds is already the complete template: per-character appearance_lock (free-form attributes with any labels), style palette_lock / negative_lock, the platform preset with its duration tier, and the consistency gate threshold. Changing a character means editing appearance_lock and the reference image."
+        },
+        "code": "characters:\n  - id: ayao\n    appearance_lock:      # 角色设定集锁定契约，写进每次主体参考 prompt\n      脸型: 鹅蛋脸，下颌线柔和，左耳戴银色小星耳钉\n      发型: 黑棕色长直发，中分，发尾微卷\n    reference_images: [reference/ayao.png]\nstyle:\n  palette_lock: [\"#2b2340\", \"#a98f6f\", \"#e9e1d3\"]\n  negative_lock: [多手指, 面部畸变, 画面模糊]\nplatform:\n  preset: douyin_60s      # 9:16 / 60s 时长档 / 字幕安全区（top 8% bottom 12% right 10%）\n  duration_tier: 60\ngates:\n  consistency_threshold: 0.85"
+      },
+      {
+        "title": {
+          "zh": "环境变量",
+          "en": "Environment variables"
+        },
+        "body": {
+          "zh": "VIDU_API_KEY（live 生成）、ZHIPU_API_KEY（GLM-4V-Flash 评审）、DRAMASER_ASSETS（自定义预置资产目录；默认仓库 assets/，安装包内置同源副本）。不设置 key 时，demo 与回放路径完全可用。",
+          "en": "VIDU_API_KEY (live generation), ZHIPU_API_KEY (GLM-4V-Flash judging), DRAMASER_ASSETS (custom preset asset root; defaults to the repo assets/ with an identical copy bundled inside the installed package). Without any key, the demo and replay path work fully."
+        },
+        "code": "export VIDU_API_KEY=...\nexport ZHIPU_API_KEY=...\nexport DRAMASER_ASSETS=/path/to/assets"
+      },
+      {
+        "title": {
+          "zh": "分镜字段与机位",
+          "en": "Shot fields and camera"
+        },
+        "body": {
+          "zh": "分镜字段为 id / characters / line / action / camera / duration_s；camera 支持远景/中景/近景/特写。字幕轨取自分镜 line 字段，落在平台安全区内。",
+          "en": "Shot fields are id / characters / line / action / camera / duration_s; camera supports wide/medium/close/extreme-close. The subtitle track is taken from the shot line field and lands inside the platform safe zone."
+        },
+        "code": "- id: ep01_s01\n  characters: [ayao]\n  line: 三年了，这家店的灯还是没换过。\n  action: 雨夜便利店门口，阿瑶收伞抖水，暖光从店内洒出\n  camera: 中景\n  duration_s: 5"
+      },
+      {
+        "title": {
+          "zh": "付费与商业",
+          "en": "Pricing"
+        },
+        "body": {
+          "zh": "CLI 与 SeriesAsset 格式 MIT 开源、永久免费，git 仓库在你自己手里。系列试点包（当前在售）¥9,800 / 系列（3 集）：按你的真实角色建角色设定集、接入你的 Vidu/智谱 key、交付 3 集可直接打开的剪映 draft、含 2 小时上手协作，通过 Issues 建立联系。托管团队工作台为 v0.2+ 规划（¥99/人/月），CLI 保持免费。",
+          "en": "The CLI and the SeriesAsset format are MIT open source and free forever, and the git repo stays in your hands. The series pilot package (currently sold) is ¥9,800 / series (3 episodes): build the character sheet from your real character, wire up your Vidu/Zhipu keys, deliver 3 JianYing-openable drafts, plus a 2-hour onboarding session — reach out via Issues. The hosted team workbench is planned for v0.2+ (¥99/user/month) with the CLI staying free."
+        }
+      }
+    ]
+  },
+  "demo": {
+    "title": {
+      "zh": "实际 Demo（replay 模式，无 API key）",
+      "en": "Recorded demo (replay mode, no API key)"
+    },
+    "note": {
+      "zh": "录制自 v0.1 demo replay：预置角色集 → 3 集 × 3 分镜双路回放 → 一致性门 → 对比 GIF + 一致性报告 + 剪映 draft。回放帧由 Pillow 确定性渲染，是漂移-锁定的示意可视化，不是模型输出；输入与版本记录于 docs/demo-results.json。",
+      "en": "Recorded from the v0.1 demo replay: preset character sheet → 3 episodes × 3 shots in two lanes → the consistency gate → a comparison GIF + consistency report + JianYing draft. Replay frames are deterministically rendered with Pillow — an illustrative visualization of drift vs. lock, not model output. Inputs and versions are recorded in docs/demo-results.json."
+    },
+    "source": "https://github.com/SuperMarioYL/dramaser/blob/main/docs/demo-results.json",
+    "steps": [
+      {
+        "label": {
+          "zh": "无 key 回放",
+          "en": "No-key replay"
+        },
+        "body": {
+          "zh": "同一套预置角色参数跑双路：无主体参考的一路按集累积漂移——第 1 集侥幸过关，第 2/3 集被一致性门拦下；锁定的一路 9/9 通过。门限 0.85，无锁定 6/9 镜头漂移。",
+          "en": "Both lanes come from the same preset character parameters: the lane without a subject reference accumulates drift per episode — episode 1 squeaks by, episodes 2 and 3 fail the consistency gate — while the locked lane passes 9/9. The gate is 0.85; the unlocked lane drifts on 6/9 shots."
+        },
+        "image": "/assets/demo-scores-light.svg",
+        "imageDark": "/assets/demo-scores-dark.svg",
+        "command": "uv run dramaser demo",
+        "output": "demo 完成（replay 模式，无 API key）\n  对比 GIF   : dramaser-demo/demo-drift-vs-locked.gif\n  一致性报告 : dramaser-demo/consistency-report.md\n  剪映 draft : dramaser-demo/jianying/dramaser_demo/draft_content.json\n  无锁定     : 6/9 镜头漂移（门限 0.85）\n  dramaser   : 9/9 镜头锁定\n  拷入剪映   : 重跑加 --install-draft"
+      }
+    ]
+  },
+  "quickstart": {
+    "title": {
+      "zh": "快速开始",
+      "en": "Quickstart"
+    },
+    "body": {
+      "zh": "需要 Python 3.12+ 与 uv。demo 路径零 API key、零 ffmpeg（Pillow 确定性回放），10 秒内产出全链路产物。",
+      "en": "You need Python 3.12+ and uv. The demo path needs zero API keys and zero ffmpeg (deterministic Pillow replay) and produces the full-chain artifacts in under 10 seconds."
+    },
+    "steps": [
+      {
+        "title": {
+          "zh": "克隆并跑无 key demo",
+          "en": "Clone and run the no-key demo"
+        },
+        "code": "git clone https://github.com/SuperMarioYL/dramaser.git\ncd dramaser\nuv run dramaser demo"
+      },
+      {
+        "title": {
+          "zh": "不想克隆，从 git 直接运行",
+          "en": "Skip the clone, run straight from git"
+        },
+        "code": "uvx --from git+https://github.com/SuperMarioYL/dramaser dramaser demo"
+      },
+      {
+        "title": {
+          "zh": "把 draft 装进剪映",
+          "en": "Install the draft into JianYing"
+        },
+        "code": "uv run dramaser demo --install-draft"
+      },
+      {
+        "title": {
+          "zh": "开始你自己的系列（live 需 Vidu 与智谱 key）",
+          "en": "Start your own series (live needs Vidu and Zhipu keys)"
+        },
+        "code": "export VIDU_API_KEY=... ZHIPU_API_KEY=...\nuv run dramaser init --preset ayao my-series\ncd my-series\nuv run dramaser generate ep01\nuv run dramaser regen ep01_s03\nuv run dramaser export ep01 --install-draft"
+      }
+    ]
+  },
+  "limitations": [
+    {
+      "zh": "replay 帧由预置角色参数用 Pillow 确定性渲染，是漂移-锁定的示意可视化，不是模型输出；其评分为渲染参数签名与锁定基准的加权距离，与 GLM-4V-Flash 门共用同一接口。",
+      "en": "Replay frames are deterministically rendered from preset character parameters with Pillow — a deliberate visualization of drift vs. lock, not model output; their score is the weighted distance between the render signature and the locked baseline, behind the same judge interface as GLM-4V-Flash."
+    },
+    {
+      "zh": "Vidu 主体参考生成按公开 ent/v2 文档实现，线格式隔离在两个方法内，尚未在真实 key 上验证过；live 模式评审视频镜头时需要 PATH 中有 ffmpeg。",
+      "en": "Vidu subject-reference generation is built from the public ent/v2 docs with the wire format isolated in two methods, and has not yet been validated against a live key; judging live video shots requires ffmpeg on PATH."
+    },
+    {
+      "zh": "一致性评分是质量门，不是绝对真值；阈值可配（默认 0.85），建议人工抽查 drifted 判定。",
+      "en": "The consistency score is a quality gate, not ground truth; the threshold is configurable (0.85 by default) and spot-checking drifted verdicts is recommended."
+    },
+    {
+      "zh": "v0.1 明确不做：Web 工作台、剧本到分镜的 LLM 自动拆解、TTS 配音与声音克隆、ASR 自动字幕、BGM 选配、自动发布抖音/视频号、多用户账号系统。",
+      "en": "Explicitly out of scope for v0.1: a web workbench, LLM script-to-storyboard splitting, TTS and voice cloning, ASR subtitles, BGM selection, auto-publishing to Douyin/Channels, and multi-user accounts."
+    }
+  ],
+  "cta": {
+    "headline": {
+      "zh": "锁住角色，把系列交给 git，\n把成片交给剪映",
+      "en": "Lock the character, hand the series to git,\nand the cut to JianYing"
+    },
+    "sub": {
+      "zh": "CLI 与 SeriesAsset 格式 MIT 开源；系列试点包与托管工作台见配置节。",
+      "en": "The CLI and the SeriesAsset format are MIT open source; the pilot package and hosted workbench are listed under configuration."
+    },
+    "button": {
+      "zh": "在 GitHub 上开始",
+      "en": "Get started on GitHub"
+    }
+  },
+  "footer": {
+    "tag": {
+      "zh": "MIT 开源 · 角色设定集是标准资产格式，交接就是交接一个 git 仓库",
+      "en": "MIT open source · the character sheet is a standard asset format — a handover is a git repo"
+    }
+  },
+  "meta": {
+    "content_version": "1",
+    "source_version": "v0.1.0",
+    "visual_profile": "neon-particle",
+    "web_factory_ref": "03e7ec8a416f868b847d13b3023bf7d1215db767"
+  }
 }

@@ -1,0 +1,92 @@
+{
+  "name": "dramaser",
+  "tagline": "Lock one character across episodes, export straight into JianYing.",
+  "architecture": {
+    "title": "dramaser / data flow",
+    "nodes": [
+      {
+        "title": "SeriesAsset",
+        "detail": "series.yaml: locks / platform rules / storyboards"
+      },
+      {
+        "title": "Pipeline core",
+        "detail": "cli: expand shots / gate / lineage"
+      },
+      {
+        "title": "Providers",
+        "detail": "replay renderer / Vidu subject reference"
+      },
+      {
+        "title": "GLM-4V-Flash judge",
+        "detail": "per-shot JSON scoring vs the lock"
+      },
+      {
+        "title": "JianYing exporter",
+        "detail": "9:16 canvas / safe-zone subtitles / tier"
+      },
+      {
+        "title": "Report renderer",
+        "detail": "drift-vs-lock GIF / consistency report"
+      }
+    ],
+    "edges": [
+      [0, 1],
+      [1, 2],
+      [2, 3],
+      [3, 1],
+      [1, 4],
+      [1, 5]
+    ]
+  },
+  "process": {
+    "title": "dramaser / locked production loop",
+    "steps": [
+      {
+        "title": "Lock the character",
+        "detail": "appearance lock in every prompt"
+      },
+      {
+        "title": "Generate and judge",
+        "detail": "Vidu reference / GLM-4V per shot"
+      },
+      {
+        "title": "Record lineage",
+        "detail": "params hash / score / status"
+      },
+      {
+        "title": "Regen drifted only",
+        "detail": "export a fresh JianYing draft"
+      }
+    ],
+    "result": "Drifted shots fail the gate and get regenerated; locked shots keep their assets."
+  },
+  "integrations": {
+    "title": "dramaser / implemented routes",
+    "items": [
+      {
+        "title": "Vidu",
+        "detail": "Subject-reference img2video"
+      },
+      {
+        "title": "GLM-4V-Flash",
+        "detail": "Structured consistency judge"
+      },
+      {
+        "title": "JianYing draft",
+        "detail": "pyJianYingDraft 0.3 export"
+      },
+      {
+        "title": "Douyin 60s preset",
+        "detail": "9:16 / duration tier / safe zone"
+      },
+      {
+        "title": "Replay demo",
+        "detail": "No-key deterministic fixtures"
+      },
+      {
+        "title": "Git-friendly project",
+        "detail": "YAML + assets + shot lineage"
+      }
+    ]
+  }
+}

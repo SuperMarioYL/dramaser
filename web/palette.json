@@ -1,0 +1,38 @@
+{
+  "mode": "auto",
+  "id": "e656d5-e76a96-e3acf6-6172dcf00cd7",
+  "identity": "https://github.com/supermarioyl/dramaser",
+  "primary": "#e656d5",
+  "secondary": "#e76a96",
+  "highlight": "#e3acf6",
+  "dark": {
+    "bg": "#0a0711",
+    "panel": "#13101e",
+    "code": "#140d1c",
+    "ink": "#f9eefd",
+    "muted": "#b29cc1",
+    "line": "#3a183c",
+    "primary": "#e656d5",
+    "secondary": "#e76a96",
+    "highlight": "#e3acf6",
+    "accent": "#e656d5",
+    "buttonStart": "#bd46af",
+    "buttonEnd": "#ba5579",
+    "buttonText": "#ffffff"
+  },
+  "light": {
+    "bg": "#fef9fe",
+    "panel": "#fef7fd",
+    "code": "#fdf3fc",
+    "ink": "#27162d",
+    "muted": "#725e84",
+    "line": "#f7cbf3",
+    "primary": "#b443a7",
+    "secondary": "#b15173",
+    "highlight": "#866591",
+    "accent": "#b443a7",
+    "buttonStart": "#bd46af",
+    "buttonEnd": "#ba5579",
+    "buttonText": "#ffffff"
+  }
+}

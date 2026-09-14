@@ -1,0 +1,59 @@
+{
+  "product": "dramaser",
+  "version": "0.1.0",
+  "mode": "replay",
+  "recorded_at": "2026-09-14T09:46:38+00:00",
+  "scope": "无 key 回放完整链路：预置角色集 → replay provider 渲染 3 集 x 3 分镜（drift / locked 双路）→ 回放一致性评分与门 → 漂移对比 GIF + 报告 + 剪映 draft 导出。非真实模型输出；live 生成需 VIDU_API_KEY / ZHIPU_API_KEY。",
+  "inputs": [
+    {
+      "path": "assets/presets/ayao/series.yaml",
+      "sha256": "c44f6994f7912a1412f144eebba5ed406ea1648c50f6cdd516d62f96a1df52cc"
+    },
+    {
+      "path": "assets/demo-replay/replay.yaml",
+      "sha256": "4f538af7fe03168634ce30567de3eef2f57b36188f74e65dee64d3d7f11319da"
+    }
+  ],
+  "steps": [
+    {
+      "command": "uv run dramaser demo",
+      "output": "demo 完成（replay 模式，无 API key）\n  对比 GIF   : dramaser-demo/demo-drift-vs-locked.gif\n  一致性报告 : dramaser-demo/consistency-report.md\n  剪映 draft : dramaser-demo/jianying/dramaser_demo/draft_content.json\n  无锁定     : 6/9 镜头漂移（门限 0.85）\n  dramaser   : 9/9 镜头锁定\n  拷入剪映   : 重跑加 --install-draft",
+      "exit_code": 0
+    }
+  ],
+  "artifacts": {
+    "gif": "dramaser-demo/demo-drift-vs-locked.gif",
+    "report": "dramaser-demo/consistency-report.md",
+    "draft": "dramaser-demo/jianying/dramaser_demo/draft_content.json"
+  },
+  "threshold": 0.85,
+  "scores": {
+    "drift": {
+      "ep01_s01": 0.9875,
+      "ep01_s02": 0.9865,
+      "ep01_s03": 0.9953,
+      "ep02_s01": 0.7308,
+      "ep02_s02": 0.729,
+      "ep02_s03": 0.7264,
+      "ep03_s01": 0.5078,
+      "ep03_s02": 0.5163,
+      "ep03_s03": 0.5034
+    },
+    "locked": {
+      "ep01_s01": 1.0,
+      "ep01_s02": 1.0,
+      "ep01_s03": 1.0,
+      "ep02_s01": 1.0,
+      "ep02_s02": 1.0,
+      "ep02_s03": 1.0,
+      "ep03_s01": 1.0,
+      "ep03_s02": 1.0,
+      "ep03_s03": 1.0
+    }
+  },
+  "notes": [
+    "replay 模式：帧由预置角色参数确定性渲染（Pillow 示意渲染，非模型输出）。",
+    "replay 评分为渲染参数签名与锁定基准的加权距离；live 模式由 GLM-4V-Flash 结构化打分，门接口一致。",
+    "draft 画布 1080x1920（9:16），字幕落在安全区（bottom 12%），每集不超 60s 时长档。"
+  ]
+}

@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# macOS
+.DS_Store
+
+# local assistant workspace
+.claude/
+CLAUDE.md
+
+# build scratch
+BUILD_SETUP_NEXT_STEPS.md
+PUBLISH_BLOCKED.md
+DRIFT_REPORT.md
+GIT_AUTHOR_DRIFT.md
+.spawn.*
+.builder_*
+.build_metadata*
+.stage_*
+_build_ctx.json

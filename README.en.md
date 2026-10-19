@@ -13,9 +13,9 @@
 
 <img src="https://readme-typing-svg.demolab.com/?font=Fira+Code&weight=600&size=24&pause=1500&color=E656D5&center=true&vCenter=true&random=false&width=680&lines=uv+run+dramaser+demo;%E2%86%92+3+episodes+x+3+shots%2C+replayed+with+no+API+key;%E2%86%92+6%2F9+unlocked+shots+flagged+as+drift;%E2%86%92+JianYing+draft+opens+directly" alt="uv run dramaser demo → 3 episodes x 3 shots, replayed with no API key → 6/9 unlocked shots flagged as drift → JianYing draft opens directly">
 
-`v0.1.0` · `Python 3.12+` · [MIT](LICENSE)
+`v0.2.0` · `Python 3.12+` · [MIT](LICENSE)
 
-[![Version](https://img.shields.io/badge/version-0.1.0-e656d5)](https://github.com/SuperMarioYL/dramaser/releases)
+[![Version](https://img.shields.io/badge/version-0.2.0-e656d5)](https://github.com/SuperMarioYL/dramaser/releases)
 [![Python](https://img.shields.io/badge/python-3.12%2B-3776ab)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-e656d5)](./LICENSE)
 [![No-key demo](https://img.shields.io/badge/demo-no--key%20replay-e656d5)](#quickstart)

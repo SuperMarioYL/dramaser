@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "dramaser"
-version = "0.1.0"
+version = "0.2.0"
 description = "The Agent-native layer that locks characters across episodes for vertical drama teams."
 license = "MIT"
 requires-python = ">=3.12"

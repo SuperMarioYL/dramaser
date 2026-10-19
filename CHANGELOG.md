@@ -3,6 +3,26 @@
 本项目的显著变更记录在本文件。版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)，
 发布标签格式为 `v<version>`（见 [VERSION](VERSION)）。
 
+## [0.2.0] — 2026-10-20
+
+live 闭环修复：`generate → 复评 → export → 剪映` 全链路对真实用户可靠。
+
+### 修复
+
+- `check consistency` 与 generate 路径对齐：视频产物先经 ffmpeg 抽帧再评审，
+  不再把 mp4 本体当作图片发给 GLM-4V-Flash；未绑定角色的镜头给出清晰错误提示，
+  不再抛裸栈。
+- 导出时间线按素材实际时长连续摆放：Vidu 4s 成片落在 5s 计划槽时后续镜头自动前移，
+  不再产生 1 秒空洞导致自身 `check draft` 判失败；字幕与画面保持同位。
+- `--install-draft` 新增 `--draft-dir` 选项：识别不到剪映草稿目录的平台（如 Linux）
+  可直接指定目标目录，报错文案不再指向不存在的参数。
+- series.yaml 往返修复：空映射（如清空 appearance_lock）保存后可正常回读，
+  `generate → save → regen/check` 不再因校验失败中断。
+
+### 其他
+
+- 新增 `dramaser --version`；版本面统一到 0.2.0。
+
 ## [0.1.0] — 2026-09-14
 
 首个公开版本：竖屏微短剧的角色一致性产片工具，成片直出剪映。
@@ -37,4 +57,5 @@
 - CI（lint + test）与 release workflow（tag → wheel + sdist + checksums），
   PyPI 发布默认关闭、按仓库变量开启。
 
+[0.2.0]: https://github.com/SuperMarioYL/dramaser/releases/tag/v0.2.0
 [0.1.0]: https://github.com/SuperMarioYL/dramaser/releases/tag/v0.1.0

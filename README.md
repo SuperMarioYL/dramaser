@@ -13,9 +13,9 @@
 
 <img src="https://readme-typing-svg.demolab.com/?font=Fira+Code&weight=600&size=24&pause=1500&color=E656D5&center=true&vCenter=true&random=false&width=680&lines=uv+run+dramaser+demo;%E2%86%92+3+%E9%9B%86%C3%973+%E5%88%86%E9%95%9C%EF%BC%8C%E6%97%A0+key%E5%9B%9E%E6%94%BE;%E2%86%92+6%2F9+%E6%97%A0%E9%94%81%E5%AE%9A%E9%95%9C%E5%A4%B4%E6%BC%82%E7%A7%BB%E8%A2%AB%E9%97%A8%E6%8B%A6%E4%B8%8B;%E2%86%92+%E5%89%AA%E6%98%A0+draft+%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80" alt="uv run dramaser demo → 3 集×3 分镜，无 key 回放 → 6/9 无锁定镜头漂移被门拦下 → 剪映 draft 直接打开">
 
-`v0.1.0` · `Python 3.12+` · [MIT](LICENSE)
+`v0.2.0` · `Python 3.12+` · [MIT](LICENSE)
 
-[![Version](https://img.shields.io/badge/version-0.1.0-e656d5)](https://github.com/SuperMarioYL/dramaser/releases)
+[![Version](https://img.shields.io/badge/version-0.2.0-e656d5)](https://github.com/SuperMarioYL/dramaser/releases)
 [![Python](https://img.shields.io/badge/python-3.12%2B-3776ab)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-e656d5)](./LICENSE)
 [![No-key demo](https://img.shields.io/badge/demo-%E6%97%A0key%E5%9B%9E%E6%94%BE-e656d5)](#快速开始)

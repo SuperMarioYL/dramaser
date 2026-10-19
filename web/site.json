@@ -277,8 +277,8 @@
       "en": "The consistency score is a quality gate, not ground truth; the threshold is configurable (0.85 by default) and spot-checking drifted verdicts is recommended."
     },
     {
-      "zh": "v0.1 明确不做：Web 工作台、剧本到分镜的 LLM 自动拆解、TTS 配音与声音克隆、ASR 自动字幕、BGM 选配、自动发布抖音/视频号、多用户账号系统。",
-      "en": "Explicitly out of scope for v0.1: a web workbench, LLM script-to-storyboard splitting, TTS and voice cloning, ASR subtitles, BGM selection, auto-publishing to Douyin/Channels, and multi-user accounts."
+      "zh": "明确不做（v0.2 保持不变）：Web 工作台、剧本到分镜的 LLM 自动拆解、TTS 配音与声音克隆、ASR 自动字幕、BGM 选配、自动发布抖音/视频号、多用户账号系统。",
+      "en": "Explicitly out of scope (unchanged in v0.2): a web workbench, LLM script-to-storyboard splitting, TTS and voice cloning, ASR subtitles, BGM selection, auto-publishing to Douyin/Channels, and multi-user accounts."
     }
   ],
   "cta": {
@@ -302,8 +302,8 @@
     }
   },
   "meta": {
-    "content_version": "1",
-    "source_version": "v0.1.0",
+    "content_version": "2",
+    "source_version": "v0.2.0",
     "visual_profile": "neon-particle",
     "web_factory_ref": "03e7ec8a416f868b847d13b3023bf7d1215db767"
   }

@@ -146,6 +146,8 @@ class Glm4VFlashJudge:
         )
 
     def _reference_image(self, series: Series, shot: Shot) -> Path:
+        if not shot.characters:
+            raise SystemExit(f"镜头 {shot.id} 未绑定角色，无法评审")
         character_id = shot.characters[0]
         character = series.character(character_id)
         if not character.reference_images:

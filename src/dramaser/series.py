@@ -76,6 +76,8 @@ def _split_key(line: str) -> tuple[str, str]:
 
 def _parse_scalar(text: str) -> Any:
     text = text.strip()
+    if text == "{}":
+        return {}  # the writer's canonical empty mapping; must read back as one
     if text.startswith("["):
         return _parse_flow_sequence(text)
     if len(text) >= 2 and text[0] == text[-1] and text[0] in ("'", '"'):

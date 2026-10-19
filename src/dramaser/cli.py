@@ -61,6 +61,21 @@ app.add_typer(check_app, name="check")
 console = Console()
 
 
+def _print_version(value: bool) -> None:
+    if value:
+        typer.echo(f"dramaser {__version__}")
+        raise typer.Exit()
+
+
+@app.callback()
+def main(
+    version: bool = typer.Option(
+        False, "--version", callback=_print_version, is_eager=True, help="输出版本号并退出。"
+    ),
+) -> None:
+    """给微短剧与竖屏 IP 账号的角色一致性 AI 产片工具，成片直出剪映。"""
+
+
 # ---------------------------------------------------------------------------
 # helpers
 # ---------------------------------------------------------------------------
@@ -120,6 +135,9 @@ def _print_check_results(results) -> bool:
 @app.command()
 def demo(
     install: bool = typer.Option(False, "--install-draft", help="把 draft 拷入剪映草稿目录"),
+    drafts_root: Path | None = typer.Option(
+        None, "--draft-dir", help="剪映草稿目录（默认自动识别；识别不到的平台如 Linux 必须指定）"
+    ),
     out: Path = typer.Option(Path("dramaser-demo"), "--out", help="输出目录"),
     preset: str = typer.Option("ayao", "--preset", help="预置角色集"),
 ) -> None:
@@ -202,7 +220,7 @@ def demo(
 
     installed = None
     if install:
-        installed = install_draft(draft_dir)
+        installed = install_draft(draft_dir, drafts_root=drafts_root)
 
     console.print(print_report_table(
         series,
@@ -427,6 +445,9 @@ def export(
     series_arg: Path = typer.Option(Path("series.yaml"), "--series"),
     out: Path = typer.Option(Path("jianying-drafts"), "--out"),
     install: bool = typer.Option(False, "--install-draft", help="拷入剪映草稿目录"),
+    drafts_root: Path | None = typer.Option(
+        None, "--draft-dir", help="剪映草稿目录（默认自动识别；识别不到的平台如 Linux 必须指定）"
+    ),
 ) -> None:
     """导出剪映可直接打开的 draft（9:16 画布、字幕安全区、时长档分段）。"""
     series, series_dir = _load_series(series_arg)
@@ -444,7 +465,7 @@ def export(
     all_ok = _print_check_results(results)
     console.print(f"[green]draft[/green]：{draft_dir / 'draft_content.json'}")
     if install:
-        installed = install_draft(draft_dir)
+        installed = install_draft(draft_dir, drafts_root=drafts_root)
         console.print(f"[green]已拷入剪映草稿目录[/green]：{installed}")
     if not all_ok:
         raise SystemExit(1)
@@ -483,7 +504,10 @@ def check_consistency(
         asset = _resolve_asset(series_dir, shot.lineage.asset)
         if not asset.is_file():
             raise SystemExit(f"镜头 {shot.id} 的产物不存在：{asset}")
-        verdict = judge.score_shot(asset, shot, series)
+        # same parity as the generate path: video assets are judged through an
+        # extracted frame, never shipped raw to the vision judge
+        frame = extract_judge_frame(asset, asset.parent)
+        verdict = judge.score_shot(frame, shot, series)
         apply_gate(shot, verdict, threshold)
         console.print(f"  {shot.id}: {shot.lineage.judge_score:.2f} "
                       f"{'锁定' if shot.lineage.status == ShotStatus.locked else '漂移'}")

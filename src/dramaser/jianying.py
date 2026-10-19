@@ -83,11 +83,15 @@ def export_draft(
 
     cursor_us = 0
     for episode in episodes:
+        # budget gate: the episode's planned storyboard must fit its tier
         try:
-            ranges = plan_episode_timing(episode.shots, geometry)
+            plan_episode_timing(episode.shots, geometry)
         except ValueError as exc:
             raise SystemExit(f"{episode.id} 无法导出：{exc}") from exc
-        for shot, (start_us, duration_us) in zip(episode.shots, ranges):
+        # placement chains by ACTUAL media durations: a live clip shorter than
+        # its planned slot (Vidu only renders 4s/8s buckets) shifts later shots
+        # forward instead of leaving a hole that fails our own `check draft`
+        for shot in episode.shots:
             asset = assets.get(shot.id)
             if asset is None or not Path(asset).is_file():
                 raise SystemExit(
@@ -95,19 +99,20 @@ def export_draft(
                 )
             material = VideoMaterial(str(asset), material_name=shot.id)
             script.add_material(material)
-            target_duration = duration_us
-            if material.material_type == "video" and material.duration < duration_us:
+            planned_duration = int(round(shot.duration_s * 1_000_000))
+            target_duration = planned_duration
+            if material.material_type == "video" and material.duration < planned_duration:
                 target_duration = material.duration
             script.add_segment(
-                VideoSegment(material, trange(cursor_us + start_us, target_duration)),
+                VideoSegment(material, trange(cursor_us, target_duration)),
                 track=video_track,
             )
             if shot.line:
                 script.add_segment(
-                    _subtitle_segment(shot, cursor_us + start_us, target_duration, geometry),
+                    _subtitle_segment(shot, cursor_us, target_duration, geometry),
                     track=text_track,
                 )
-        cursor_us += ranges[-1][0] + ranges[-1][1] if ranges else 0
+            cursor_us += target_duration
 
     script.save()
     return out_dir / draft_name

@@ -9,6 +9,8 @@ from __future__ import annotations
 
 import filecmp
 import json
+import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -19,7 +21,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
-from dramaser.jianying import check_draft, export_draft, install_draft  # noqa: E402
+from dramaser.jianying import check_draft, check_draft_for_series, export_draft, install_draft  # noqa: E402
 from dramaser.providers.base import GenerationRequest, ReplayProvider  # noqa: E402
 from dramaser.series import (  # noqa: E402
     Series,
@@ -212,6 +214,53 @@ def test_install_draft_copies_into_root(tmp_path: Path) -> None:
     installed = install_draft(draft_dir, drafts_root=root)
     assert (installed / "draft_content.json").is_file()
     assert installed.name == draft_dir.name
+
+
+def _make_mp4(path: Path, seconds: float) -> Path:
+    ffmpeg = shutil.which("ffmpeg")
+    if not ffmpeg:
+        pytest.skip("ffmpeg not available")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    subprocess.run(
+        [ffmpeg, "-y", "-loglevel", "error", "-f", "lavfi",
+         "-i", f"color=c=blue:s=720x1280:d={seconds}",
+         "-pix_fmt", "yuv420p", str(path)],
+        check=True,
+    )
+    return path
+
+
+def test_export_chains_short_video_without_gaps(tmp_path: Path) -> None:
+    """A live clip shorter than its planned slot must shift later shots forward.
+
+    Vidu only renders 4s/8s buckets, so the default 5.0s shot gets a 4s clip;
+    v0.1.0 placed segments on the planned grid and left a 1s hole that failed
+    our own `check draft` chained check (regression for dramaser-fix-2).
+    """
+    series, assets = _make_series(tmp_path)
+    assets["ep01_s01"] = _make_mp4(tmp_path / "assets" / "ep01_s01.mp4", 4)
+    draft_dir = export_draft(series, series.episodes, tmp_path / "jianying", assets)
+    content = json.loads((draft_dir / "draft_content.json").read_text(encoding="utf-8"))
+    materials = {m["material_name"]: m for m in content["materials"]["videos"]}
+    clip_us = materials["ep01_s01"]["duration"]  # probed: ~4s, strictly < the 5s slot
+    assert clip_us < 5_000_000
+    video_track = next(t for t in content["tracks"] if t["type"] == "video")
+    placed = [
+        (s["target_timerange"]["start"], s["target_timerange"]["duration"])
+        for s in video_track["segments"]
+    ]
+    # the 4s clip occupies its shot's head; every later shot chains tightly
+    # (v0.1.0 placed segment 2 at 5_000_000, leaving a >1s hole)
+    assert placed[0] == (0, clip_us)
+    for (prev_start, prev_dur), (start, dur) in zip(placed, placed[1:]):
+        assert start == prev_start + prev_dur
+    # subtitles track their shot's actual placement (first subtitle follows the 4s clip)
+    text_track = next(t for t in content["tracks"] if t["type"] == "text")
+    text_starts = [s["target_timerange"]["start"] for s in text_track["segments"]]
+    assert text_starts == [start for start, _ in placed]
+    # the export must now pass its own quality gate, including the chained check
+    results = check_draft_for_series(draft_dir, series)
+    assert all(r.ok for r in results), [r.detail for r in results if not r.ok]
 
 
 # ---------------------------------------------------------------------------

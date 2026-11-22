@@ -74,17 +74,32 @@ def _split_key(line: str) -> tuple[str, str]:
     )
 
 
+def _strip_comment(text: str) -> str:
+    """Drop a trailing ``# ...`` comment that sits outside quotes.
+
+    YAML starts a comment at ``#`` only when it is at the start of a token or
+    preceded by whitespace, so ``#2b2340`` and quoted values keep their ``#``.
+    """
+    in_single = in_double = False
+    for i, ch in enumerate(text):
+        if ch == "'" and not in_double:
+            in_single = not in_single
+        elif ch == '"' and not in_single:
+            in_double = not in_double
+        elif ch == "#" and not in_single and not in_double:
+            if i == 0 or text[i - 1] == " ":
+                return text[:i].rstrip()
+    return text
+
+
 def _parse_scalar(text: str) -> Any:
-    text = text.strip()
+    text = _strip_comment(text.strip()).strip()
     if text == "{}":
         return {}  # the writer's canonical empty mapping; must read back as one
     if text.startswith("["):
         return _parse_flow_sequence(text)
     if len(text) >= 2 and text[0] == text[-1] and text[0] in ("'", '"'):
         return _unquote(text)
-    # plain scalar: trailing comments only when preceded by whitespace
-    if " #" in text:
-        text = text.split(" #", 1)[0].rstrip()
     if text == "":
         return None
     if text in ("~", "null", "Null", "NULL"):
@@ -171,10 +186,17 @@ def _parse_mapping(
 ) -> tuple[dict[str, Any], int]:
     result: dict[str, Any] = {}
     if first_line is not None:
-        # a "- key: value" sequence item: consume the synthetic first pair
-        # without advancing past the current line
+        # a "- key: value" or "- key:" sequence item: consume the synthetic
+        # first pair without advancing past the current line (i already points
+        # at the line after it)
         key, rest = _split_key(first_line)
-        result[key] = _parse_scalar(rest) if rest else None
+        rest = _strip_comment(rest).strip()
+        if not rest and i < len(lines) and _indent_of(lines[i]) > indent:
+            # "- key:" followed by its nested block (the shape yaml_dump emits)
+            value, i = _parse_block(lines, i, _indent_of(lines[i]))
+            result[key] = value
+        else:
+            result[key] = _parse_scalar(rest) if rest else None
     while i < len(lines):
         line = lines[i]
         if _indent_of(line) != indent:
@@ -185,6 +207,7 @@ def _parse_mapping(
         if content == "-" or content.startswith("- "):
             break
         key, rest = _split_key(content)
+        rest = _strip_comment(rest).strip()
         if rest:
             result[key] = _parse_scalar(rest)
             i += 1

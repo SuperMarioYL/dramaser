@@ -263,6 +263,29 @@ def test_export_chains_short_video_without_gaps(tmp_path: Path) -> None:
     assert all(r.ok for r in results), [r.detail for r in results if not r.ok]
 
 
+def test_check_draft_requires_every_shot_line_as_subtitle(tmp_path: Path) -> None:
+    """A draft missing one shot's subtitle must fail the series-aware check.
+
+    ``check_draft`` used to assert only that the text track was non-empty, so
+    deleting a subtitle still passed the gate that ``export`` relies on.
+    """
+    series, assets = _make_series(tmp_path)
+    draft_dir = export_draft(series, series.episodes, tmp_path / "jianying", assets)
+    clean = {r.name: r for r in check_draft_for_series(draft_dir, series)}
+    assert clean["每条台词都有字幕"].ok
+
+    content_path = draft_dir / "draft_content.json"
+    content = json.loads(content_path.read_text(encoding="utf-8"))
+    text_track = next(t for t in content["tracks"] if t["type"] == "text")
+    text_track["segments"].pop(0)
+    content_path.write_text(json.dumps(content, ensure_ascii=False), encoding="utf-8")
+
+    results = {r.name: r for r in check_draft_for_series(draft_dir, series)}
+    coverage = results["每条台词都有字幕"]
+    assert not coverage.ok
+    assert "台词 ep01_s01" in coverage.detail
+
+
 # ---------------------------------------------------------------------------
 # Replay determinism (the no-key demo contract)
 # ---------------------------------------------------------------------------

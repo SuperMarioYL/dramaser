@@ -13,9 +13,9 @@
 
 <img src="https://readme-typing-svg.demolab.com/?font=Fira+Code&weight=600&size=24&pause=1500&color=E656D5&center=true&vCenter=true&random=false&width=680&lines=uv+run+dramaser+demo;%E2%86%92+3+episodes+x+3+shots%2C+replayed+with+no+API+key;%E2%86%92+6%2F9+unlocked+shots+flagged+as+drift;%E2%86%92+JianYing+draft+opens+directly" alt="uv run dramaser demo → 3 episodes x 3 shots, replayed with no API key → 6/9 unlocked shots flagged as drift → JianYing draft opens directly">
 
-`v0.2.0` · `Python 3.12+` · [MIT](LICENSE)
+`v0.3.0` · `Python 3.12+` · [MIT](LICENSE)
 
-[![Version](https://img.shields.io/badge/version-0.2.0-e656d5)](https://github.com/SuperMarioYL/dramaser/releases)
+[![Version](https://img.shields.io/badge/version-0.3.0-e656d5)](https://github.com/SuperMarioYL/dramaser/releases)
 [![Python](https://img.shields.io/badge/python-3.12%2B-3776ab)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-e656d5)](./LICENSE)
 [![No-key demo](https://img.shields.io/badge/demo-no--key%20replay-e656d5)](#quickstart)
@@ -70,6 +70,7 @@ material files on disk    pass   all present
 segments chained          pass   43.0s total
 per-episode tier (60s)    pass   3 episodes within budget
 subtitles in safe zone    pass   9 cues (bottom≥12%)
+every line subtitled      pass   9 lines covered (when series.yaml is present)
 ```
 
 ## Quickstart
@@ -188,15 +189,16 @@ dramaser targets commercial production teams, and it does not monetize by lockin
 
 - **CLI and the SeriesAsset format**: MIT open source, free forever. The character sheet is a standard asset format and the git repo stays in your hands.
 - **Series pilot package (currently sold)**: ¥9,800 / series (3 episodes) — build the character sheet from your real character, wire up your Vidu/Zhipu keys, deliver 3 JianYing-openable drafts, plus a 2-hour onboarding session. Reach out via [Issues](https://github.com/SuperMarioYL/dramaser/issues).
-- **Hosted team workbench (planned for v0.2+)**: ¥99/user/month — character asset library, series-project collaboration and permissions; the CLI stays free. Pricing anchor: re-burning the drifted footage of 3 episodes already costs about as much in API credits.
+- **Hosted team workbench (candidate, not committed)**: ¥99/user/month — character asset library, series-project collaboration and permissions; the CLI stays free. Pricing anchor: re-burning the drifted footage of 3 episodes already costs about as much in API credits.
 
 Open format plus closed in-the-loop control is deliberate: the moat is the combination of the character-lock contract, shot lineage and platform rules — not protocol invention.
 
 ## Roadmap
 
-- **v0.1 (current)**: replay demo, JianYing draft export and verification, Vidu live generation + GLM-4V-Flash consistency gate + shot-level regen.
-- **v0.2 plans**: local CLIP-embedding judge (same gate interface), a Kling adapter (the provider interface already leaves the extension point), hosted team workbench.
-- **Explicitly out of scope for v0.1**: web workbench (CLI first — teams hand over git repos), LLM script-to-storyboard splitting (hand-written YAML storyboards), TTS and voice cloning (the sheet only stores a voice field), ASR subtitles (subtitle text comes from the shot `line` field), BGM selection, auto-publishing to Douyin/Channels, multi-user accounts.
+- **v0.2 (released)**: live-loop fixes — video assets re-judged through an extracted frame, export chained by actual media durations, `--draft-dir`, and empty mappings read back from series.yaml.
+- **v0.3 (current)**: CLI path contracts (lineage is written back to the file given to `--series`; `init` accepts an existing empty directory), hand-edited series.yaml templates and nested blocks load, `check draft` verifies every shot line has a subtitle, and the demo exits non-zero when the locked lane misses its gate.
+- **Candidates (not committed)**: per-shot `--judge auto` selection for mixed-provider series, a local CLIP-embedding judge (same gate interface), a Kling adapter (the provider interface already leaves the extension point), and a hosted team workbench.
+- **Explicitly out of scope**: web workbench (CLI first — teams hand over git repos), LLM script-to-storyboard splitting (hand-written YAML storyboards), TTS and voice cloning (the sheet only stores a voice field), ASR subtitles (subtitle text comes from the shot `line` field), BGM selection, auto-publishing to Douyin/Channels, multi-user accounts.
 
 ## License
 

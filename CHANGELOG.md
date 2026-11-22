@@ -3,6 +3,32 @@
 本项目的显著变更记录在本文件。版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)，
 发布标签格式为 `v<version>`（见 [VERSION](VERSION)）。
 
+## [0.3.0] — 2026-11-23
+
+CLI 与校验层的契约修复：`--series` 不再写错文件，手改模板可以加载，
+`check draft` 与 demo 不再静默通过。
+
+### 修复
+
+- `generate` / `regen` / `check consistency` 把血缘写回 `--series` 指定的那个文件：
+  以前总是写到同目录的 `series.yaml`，用户改名的系列文件会停留在 pending，
+  同时出现两个真相源。
+- `init` 接受已存在的空目录：不再因 `shutil.copytree` 拒绝已存在目录而抛出
+  `FileExistsError` 裸栈；非空目录仍被拒绝。
+- 块式 YAML 子集补齐两处读写不对称：`yaml_dump` 写出的「序列项首键 + 嵌套块」
+  现在能被 `yaml_load` 读回；README 配置模板里的键尾行内注释
+  （如 `appearance_lock:      # ...`）按注释处理，不再被当成值而导致嵌套键缩进报错。
+- `check draft` 增加逐镜头字幕覆盖校验：非空 `line` 的镜头必须在字幕轨上找到对应
+  台词；删掉一条字幕不再通过导出依赖的质量门（未提供 series 的裸 draft 校验不变）。
+- `demo` 在锁定组未过一致性门时以非零码失败：以前即使输出「0/9 镜头锁定」也退出 0，
+  零 key 的招牌路径无法自我验证。
+
+### 其他
+
+- 版本面统一到 0.3.0；双语 README 路线图按实际发布状态重写。
+- `dist/` 只保留当前版本的 wheel 与 sdist，移除会被发布流程当作附件上传的
+  `dist/.gitignore`。
+
 ## [0.2.0] — 2026-10-20
 
 live 闭环修复：`generate → 复评 → export → 剪映` 全链路对真实用户可靠。
@@ -57,5 +83,6 @@ live 闭环修复：`generate → 复评 → export → 剪映` 全链路对真�
 - CI（lint + test）与 release workflow（tag → wheel + sdist + checksums），
   PyPI 发布默认关闭、按仓库变量开启。
 
+[0.3.0]: https://github.com/SuperMarioYL/dramaser/releases/tag/v0.3.0
 [0.2.0]: https://github.com/SuperMarioYL/dramaser/releases/tag/v0.2.0
 [0.1.0]: https://github.com/SuperMarioYL/dramaser/releases/tag/v0.1.0

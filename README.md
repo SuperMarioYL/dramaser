@@ -13,9 +13,9 @@
 
 <img src="https://readme-typing-svg.demolab.com/?font=Fira+Code&weight=600&size=24&pause=1500&color=E656D5&center=true&vCenter=true&random=false&width=680&lines=uv+run+dramaser+demo;%E2%86%92+3+%E9%9B%86%C3%973+%E5%88%86%E9%95%9C%EF%BC%8C%E6%97%A0+key%E5%9B%9E%E6%94%BE;%E2%86%92+6%2F9+%E6%97%A0%E9%94%81%E5%AE%9A%E9%95%9C%E5%A4%B4%E6%BC%82%E7%A7%BB%E8%A2%AB%E9%97%A8%E6%8B%A6%E4%B8%8B;%E2%86%92+%E5%89%AA%E6%98%A0+draft+%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80" alt="uv run dramaser demo → 3 集×3 分镜，无 key 回放 → 6/9 无锁定镜头漂移被门拦下 → 剪映 draft 直接打开">
 
-`v0.2.0` · `Python 3.12+` · [MIT](LICENSE)
+`v0.3.0` · `Python 3.12+` · [MIT](LICENSE)
 
-[![Version](https://img.shields.io/badge/version-0.2.0-e656d5)](https://github.com/SuperMarioYL/dramaser/releases)
+[![Version](https://img.shields.io/badge/version-0.3.0-e656d5)](https://github.com/SuperMarioYL/dramaser/releases)
 [![Python](https://img.shields.io/badge/python-3.12%2B-3776ab)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-e656d5)](./LICENSE)
 [![No-key demo](https://img.shields.io/badge/demo-%E6%97%A0key%E5%9B%9E%E6%94%BE-e656d5)](#快速开始)
@@ -70,6 +70,7 @@ demo 完成（replay 模式，无 API key）
 视频段连续无空洞          通过   总时长 43.0s
 每集不超时长档（60s）     通过   3 集全部达标
 字幕全部位于安全区        通过   9 条字幕达标（bottom≥12%）
+每条台词都有字幕          通过   9 条台词齐全（提供 series.yaml 时）
 ```
 
 ## 快速开始
@@ -188,15 +189,16 @@ dramaser 面向商业承制团队，变现不靠锁 CLI：
 
 - **CLI 与 SeriesAsset 格式**：MIT 开源，永久免费。角色设定集是标准资产格式，git 在你自己手里。
 - **系列试点包（当前在售）**：¥9,800 / 系列（3 集）——按你的真实角色建角色设定集、接入你的 Vidu/智谱 key、交付 3 集可直接打开的剪映 draft、含 2 小时上手协作。通过 [Issues](https://github.com/SuperMarioYL/dramaser/issues) 建立联系。
-- **托管团队工作台（v0.2+ 规划）**：¥99/人/月——角色资产库、系列工程协作与权限；CLI 保持免费。定价参考：人工重烧 3 集漂移素材的 API 成本已接近月费。
+- **托管团队工作台（候选，未承诺）**：¥99/人/月——角色资产库、系列工程协作与权限；CLI 保持免费。定价参考：人工重烧 3 集漂移素材的 API 成本已接近月费。
 
 格式开源 + 在环控制闭源，是刻意的：护城河在角色锁定契约与镜头血缘和平台规则的组合上，不在协议发明。
 
 ## 路线图
 
-- **v0.1（当前）**：replay demo、剪映 draft 导出与校验、Vidu live 生成 + GLM-4V-Flash 一致性门 + 分镜级 regen。
-- **v0.2 计划**：本地 CLIP embedding 评审（门接口不变）、可灵 Kling adapter（provider 接口已留扩展点）、托管团队工作台。
-- **明确不做（v0.1）**：Web 工作台（CLI 先行，团队交接靠 git）、剧本到分镜的 LLM 自动拆解（手写 YAML 分镜）、TTS 配音与声音克隆（设定集只存 voice 字段）、ASR 自动字幕（字幕取自分镜 line 字段）、BGM 选配、自动发布抖音/视频号、多用户账号系统。
+- **v0.2（已发布）**：live 闭环修复——视频产物抽帧复评、导出按素材实际时长 chaining、`--draft-dir`、series.yaml 空映射回读。
+- **v0.3（当前）**：CLI 路径契约（血缘写回 `--series` 指定的文件、`init` 接受已存在的空目录）、series.yaml 手改模板与嵌套块可回读、`check draft` 逐镜头字幕覆盖、demo 在锁定组未过一致性门时以非零码失败。
+- **候选（未承诺）**：混合来源镜头的 `--judge auto` 逐镜头选路、本地 CLIP embedding 评审（门接口不变）、可灵 Kling adapter（provider 接口已留扩展点）、托管团队工作台。
+- **明确不做**：Web 工作台（CLI 先行，团队交接靠 git）、剧本到分镜的 LLM 自动拆解（手写 YAML 分镜）、TTS 配音与声音克隆（设定集只存 voice 字段）、ASR 自动字幕（字幕取自分镜 line 字段）、BGM 选配、自动发布抖音/视频号、多用户账号系统。
 
 ## 许可证
 

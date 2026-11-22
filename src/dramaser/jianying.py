@@ -178,8 +178,14 @@ def check_draft(
     *,
     duration_tier: int = 60,
     safe_bottom: float = 0.12,
+    expected_lines_by_episode: dict[str, list[str]] | None = None,
 ) -> list[CheckResult]:
-    """Verify the exported draft against the vertical-platform contract."""
+    """Verify the exported draft against the vertical-platform contract.
+
+    ``expected_lines_by_episode`` turns on the per-shot subtitle coverage check
+    for the episodes present in this draft (the series-aware caller passes the
+    storyboard; a bare draft check cannot know what was planned).
+    """
     results: list[CheckResult] = []
     content_path = draft_dir / "draft_content.json"
     if not content_path.is_file():
@@ -281,13 +287,42 @@ def check_draft(
             f"{len(lines_on_track)} 条台词",
         )
     )
+
+    # per-shot coverage: a draft may not silently drop a shot's dialogue. Only
+    # episodes actually present in the draft are compared, so checking a
+    # single-episode export against the full series stays honest.
+    if expected_lines_by_episode is not None:
+        pool = list(lines_on_track)
+        missing: list[str] = []
+        checked = 0
+        for episode_id, lines in expected_lines_by_episode.items():
+            if episode_id not in episode_totals:
+                continue
+            for line in lines:
+                checked += 1
+                if line in pool:
+                    pool.remove(line)
+                else:
+                    missing.append(f"{episode_id}: {line}")
+        results.append(
+            CheckResult(
+                "每条台词都有字幕",
+                not missing,
+                "缺失：" + "; ".join(missing) if missing else f"{checked} 条台词齐全",
+            )
+        )
     return results
 
 
 def check_draft_for_series(draft_dir: Path, series: Series) -> list[CheckResult]:
     geometry = PlatformGeometry.from_preset(series.platform)
+    expected = {
+        episode.id: [shot.line for shot in episode.shots if shot.line]
+        for episode in series.episodes
+    }
     return check_draft(
         draft_dir,
         duration_tier=geometry.duration_tier,
         safe_bottom=geometry.safe.bottom,
+        expected_lines_by_episode={ep: lines for ep, lines in expected.items() if lines},
     )

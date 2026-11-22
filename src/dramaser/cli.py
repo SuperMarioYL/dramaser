@@ -85,7 +85,7 @@ def _load_series(series_arg: Path) -> tuple[Series, Path]:
     path = Path(series_arg)
     if not path.is_file():
         raise SystemExit(f"找不到系列工程文件：{path}（先运行 dramaser init）")
-    return Series.load(path), path.parent
+    return Series.load(path), path
 
 
 def _repo_relative(path: Path) -> str:
@@ -216,6 +216,9 @@ def demo(
     drift_failed = sum(
         1 for s in drift_series.all_shots() if s.lineage.status == ShotStatus.drifted
     )
+    locked_failed = sum(
+        1 for s in locked_series.all_shots() if s.lineage.status != ShotStatus.locked
+    )
     total = len(locked_assets)
 
     installed = None
@@ -250,6 +253,16 @@ def demo(
         )
     )
     console.print(output)
+
+    # the demo's headline claim is that the locked lane passes its own gate:
+    # never report success while that lane is failing (no-key CI would go green
+    # on a broken render/judge path otherwise)
+    if locked_failed:
+        console.print(
+            f"[red]锁定组 {locked_failed}/{total} 镜头未过一致性门"
+            f"（门限 {threshold:.2f}）[/red]"
+        )
+        raise SystemExit(1)
 
     assets_root = resolve_assets_root()
     write_demo_results(
@@ -313,7 +326,7 @@ def init(
     target = Path(dir)
     if target.exists() and any(target.iterdir()):
         raise SystemExit(f"目标目录非空：{target}")
-    shutil.copytree(preset_dir, target)
+    shutil.copytree(preset_dir, target, dirs_exist_ok=True)
     console.print(f"[green]已创建系列工程[/green]：{target}")
     console.print(f"  编辑分镜：{target / 'series.yaml'}")
     console.print("  下一步   ：设置 VIDU_API_KEY / ZHIPU_API_KEY 后运行 "
@@ -374,14 +387,15 @@ def generate(
     provider: str = typer.Option("vidu", "--provider", help="vidu | replay"),
 ) -> None:
     """live 生成分集（Vidu 主体参考），逐镜头过 GLM-4V-Flash 一致性门。"""
-    series, series_dir = _load_series(series_arg)
+    series, series_path = _load_series(series_arg)
+    series_dir = series_path.parent
     try:
         episode_obj = series.episode(episode)
     except KeyError:
         raise SystemExit(f"分集 {episode} 不存在；可用：{[e.id for e in series.episodes]}")
     console.print(f"[bold]{series.title} · {episode} {episode_obj.title}[/bold]")
     _generate_shots(series, series_dir, list(episode_obj.shots), provider)
-    series.save(series_dir / "series.yaml")
+    series.save(series_path)
     report_path = render_report(
         series,
         {},
@@ -407,7 +421,8 @@ def regen(
     provider: str = typer.Option("vidu", "--provider", help="vidu | replay"),
 ) -> None:
     """分镜级局部重生成：只重烧目标镜头，其余血缘与产物保持不变。"""
-    series, series_dir = _load_series(series_arg)
+    series, series_path = _load_series(series_arg)
+    series_dir = series_path.parent
     if shot_id is None:
         targets = [s for s in series.all_shots() if s.lineage.status == ShotStatus.drifted]
         if not targets:
@@ -421,7 +436,7 @@ def regen(
     before = {s.id: (s.lineage.params_hash, s.lineage.asset) for s in series.all_shots()}
     console.print(f"regen {len(targets)} 个镜头：{[s.id for s in targets]}")
     _generate_shots(series, series_dir, targets, provider)
-    series.save(series_dir / "series.yaml")
+    series.save(series_path)
     unchanged = [
         s.id
         for s in series.all_shots()
@@ -450,7 +465,8 @@ def export(
     ),
 ) -> None:
     """导出剪映可直接打开的 draft（9:16 画布、字幕安全区、时长档分段）。"""
-    series, series_dir = _load_series(series_arg)
+    series, series_path = _load_series(series_arg)
+    series_dir = series_path.parent
     try:
         episode_obj = series.episode(episode)
     except KeyError:
@@ -484,7 +500,8 @@ def check_consistency(
     ),
 ) -> None:
     """复评全部已有镜头产物，更新锁定/漂移状态。"""
-    series, series_dir = _load_series(series_arg)
+    series, series_path = _load_series(series_arg)
+    series_dir = series_path.parent
     shots = [s for s in series.all_shots() if s.lineage.asset]
     if not shots:
         raise SystemExit("还没有任何镜头产物；先运行 generate 或 demo。")
@@ -511,7 +528,7 @@ def check_consistency(
         apply_gate(shot, verdict, threshold)
         console.print(f"  {shot.id}: {shot.lineage.judge_score:.2f} "
                       f"{'锁定' if shot.lineage.status == ShotStatus.locked else '漂移'}")
-    series.save(series_dir / "series.yaml")
+    series.save(series_path)
     drifted = [s.id for s in shots if s.lineage.status == ShotStatus.drifted]
     console.print(f"[green]已更新[/green] {series_arg}；漂移镜头："
                   f"{', '.join(drifted) if drifted else '无'}")

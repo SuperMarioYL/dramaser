@@ -133,8 +133,8 @@
           "en": "Implemented routes"
         },
         "body": {
-          "zh": "无 key 回放 demo、Vidu 主体参考生成（需 key，按公开 ent/v2 文档实现）、GLM-4V-Flash 结构化评审（需 key）、剪映 draft 导出（pyJianYingDraft 0.3）、抖音 60s 预设（9:16 / 时长档 / 安全区）、git 友好的系列工程。live 生成与评审需要 VIDU_API_KEY 与 ZHIPU_API_KEY；replay 回放无需任何 key。",
-          "en": "The no-key replay demo, Vidu subject-reference generation (key required; built from the public ent/v2 docs), GLM-4V-Flash structured judging (key required), JianYing draft export (pyJianYingDraft 0.3), the Douyin 60s preset (9:16 / tier / safe zone), and a git-friendly series project. Live generation and judging need VIDU_API_KEY and ZHIPU_API_KEY; the replay demo needs no key at all."
+          "zh": "无 key 回放 demo、Vidu 主体参考生成（需 key，按公开 ent/v2 文档实现）、GLM-4V-Flash 结构化评审（需 key）、剪映 draft 导出（pyJianYingDraft 0.3）、抖音 60s 预设（9:16 / 时长档 / 安全区）、git 友好的系列工程。live 生成与评审需要 VIDU_API_KEY 与 ZHIPU_API_KEY；replay 回放无需任何 key。v0.3 起 `check draft` 逐镜头核对每条台词都有字幕，`--series` 指向的文件名会被原样写回。",
+          "en": "The no-key replay demo, Vidu subject-reference generation (key required; built from the public ent/v2 docs), GLM-4V-Flash structured judging (key required), JianYing draft export (pyJianYingDraft 0.3), the Douyin 60s preset (9:16 / tier / safe zone), and a git-friendly series project. Live generation and judging need VIDU_API_KEY and ZHIPU_API_KEY; the replay demo needs no key at all. Since v0.3, `check draft` verifies that every shot line has a subtitle, and lineage is written back to the exact file passed to `--series`."
         },
         "image": {
           "light": "/assets/presentation/integrations-light.svg",
@@ -190,8 +190,8 @@
           "en": "Pricing"
         },
         "body": {
-          "zh": "CLI 与 SeriesAsset 格式 MIT 开源、永久免费，git 仓库在你自己手里。系列试点包（当前在售）¥9,800 / 系列（3 集）：按你的真实角色建角色设定集、接入你的 Vidu/智谱 key、交付 3 集可直接打开的剪映 draft、含 2 小时上手协作，通过 Issues 建立联系。托管团队工作台为 v0.2+ 规划（¥99/人/月），CLI 保持免费。",
-          "en": "The CLI and the SeriesAsset format are MIT open source and free forever, and the git repo stays in your hands. The series pilot package (currently sold) is ¥9,800 / series (3 episodes): build the character sheet from your real character, wire up your Vidu/Zhipu keys, deliver 3 JianYing-openable drafts, plus a 2-hour onboarding session — reach out via Issues. The hosted team workbench is planned for v0.2+ (¥99/user/month) with the CLI staying free."
+          "zh": "CLI 与 SeriesAsset 格式 MIT 开源、永久免费，git 仓库在你自己手里。系列试点包（当前在售）¥9,800 / 系列（3 集）：按你的真实角色建角色设定集、接入你的 Vidu/智谱 key、交付 3 集可直接打开的剪映 draft、含 2 小时上手协作，通过 Issues 建立联系。托管团队工作台为候选规划（未承诺，¥99/人/月），CLI 保持免费。",
+          "en": "The CLI and the SeriesAsset format are MIT open source and free forever, and the git repo stays in your hands. The series pilot package (currently sold) is ¥9,800 / series (3 episodes): build the character sheet from your real character, wire up your Vidu/Zhipu keys, deliver 3 JianYing-openable drafts, plus a 2-hour onboarding session — reach out via Issues. The hosted team workbench is a candidate, not committed (¥99/user/month) with the CLI staying free."
         }
       }
     ]
@@ -277,8 +277,8 @@
       "en": "The consistency score is a quality gate, not ground truth; the threshold is configurable (0.85 by default) and spot-checking drifted verdicts is recommended."
     },
     {
-      "zh": "明确不做（v0.2 保持不变）：Web 工作台、剧本到分镜的 LLM 自动拆解、TTS 配音与声音克隆、ASR 自动字幕、BGM 选配、自动发布抖音/视频号、多用户账号系统。",
-      "en": "Explicitly out of scope (unchanged in v0.2): a web workbench, LLM script-to-storyboard splitting, TTS and voice cloning, ASR subtitles, BGM selection, auto-publishing to Douyin/Channels, and multi-user accounts."
+      "zh": "明确不做（v0.2 / v0.3 保持不变）：Web 工作台、剧本到分镜的 LLM 自动拆解、TTS 配音与声音克隆、ASR 自动字幕、BGM 选配、自动发布抖音/视频号、多用户账号系统。",
+      "en": "Explicitly out of scope (unchanged in v0.2 / v0.3): a web workbench, LLM script-to-storyboard splitting, TTS and voice cloning, ASR subtitles, BGM selection, auto-publishing to Douyin/Channels, and multi-user accounts."
     }
   ],
   "cta": {
@@ -302,8 +302,8 @@
     }
   },
   "meta": {
-    "content_version": "2",
-    "source_version": "v0.2.0",
+    "content_version": "3",
+    "source_version": "v0.3.0",
     "visual_profile": "neon-particle",
     "web_factory_ref": "03e7ec8a416f868b847d13b3023bf7d1215db767"
   }

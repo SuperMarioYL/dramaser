@@ -18,4 +18,4 @@ def test_cli_reports_version() -> None:
     result = CliRunner().invoke(app, ["--version"])
     assert result.exit_code == 0, result.output
     assert result.exception is None
-    assert "dramaser 0.2.0" in result.output
+    assert "dramaser 0.3.0" in result.output
